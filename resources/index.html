@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{placeotter}}</title>
+    <meta name="description" content="Otter placeholder image generator">
+    <meta name="author" content="https://github.com/WPRobson">
+    <meta name="keywords" content="placeholder, image, service, otter">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!--    <meta property="og:site_name" content="Placeotter">-->
+<!--    <meta property="og:title" content="Placeotter>-->
+<!--    <meta property="og:description" content="Otter placeholder image generator">-->
+<!--    <meta property="og:type" content="website">-->
+<!--    <meta property="og:image" content="https://placeotter.com/400/400.jpg">-->
+<!--    <meta property="og:url" content="https://placeotter.com">-->
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #1A1A1D;
+            color: #FFFFFF;
+            height: 100vh;
+            width: 100vw;
+            font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"PT Sans","Open Sans","Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+
+        h1 {
+            color: #a71900;
+        }
+
+        a,
+        a:visited,
+        a:hover {
+            color: #a71900;
+        }
+
+        blockquote {
+            padding: 1rem;
+            background-color: #4E4E50;
+            line-height: 2rem;
+            word-break: break-word;
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+        }
+
+        .grid {
+            display: grid;
+            margin: auto;
+            grid-template-columns: repeat(9, 1fr);
+            grid-template-rows: repeat(5, 1fr) 1rem;
+            grid-column-gap: 15px;
+            grid-row-gap: 15px;
+
+            width: min(80vw, 780px);
+            min-height: calc(min(80vw, 780px) / 1.5);
+
+            font-size: 1rem;
+        }
+
+        .main-area { grid-area: 1 / 1 / 4 / 8; }
+        .right-block-top-image { grid-area: 1 / 8 / 3 / 10; }
+        .right-block-bottom-image { grid-area: 3 / 8 / 6 / 10; }
+        .bottom-block-left-image { grid-area: 4 / 1 / 6 / 4; }
+        .bottom-block-right-image { grid-area: 4 / 4 / 6 / 8; }
+        .image-block {
+            background-size: cover;
+        }
+        .footer-text { grid-area: 6 / 1 / 7 / 10; }
+
+        .footer-text > span:nth-child(2){
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="grid">
+        <div class="main-area">
+            <h1>placeotter</h1>
+            <p>A simple service to generate placeholder images of otters, inspired by <a target="_blank" href="https://placecloth.com">placesloth</a></p>
+            <br>
+            <blockquote>
+                https://placeotter.com/{width}/{height} or<br>
+                https://placeotter.com/{width}/{height}.{ext}<br>
+                <br>
+                Supported extensions: png, jpg, gif, ico, bmp
+            </blockquote>
+        </div>
+        <div class="image-block right-block-top-image"></div>
+        <div class="image-block right-block-bottom-image"></div>
+        <div class="image-block bottom-block-left-image"></div>
+        <div class="image-block bottom-block-right-image"></div>
+        <div class="footer-text">
+            <span>Provided by <a href="https://github.com/WPRobson" target="blank">WPRobson</a></span>
+            <span>
+            <a href="https://github.com/WPRobson/placeotter.com" target="_blank" aria-label="Link to the placeotter.com GitHub repository">
+              <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24">
+                <path fill="#A71900FF" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a>
+          </span>
+        </div>
+    </div>
+</div>
+<script>
+    const imageBlocks = [...document.querySelectorAll('.image-block')];
+    for (const imageBlock of imageBlocks) {
+        const height = Math.ceil(imageBlock.offsetHeight / 50) * 50;
+        const width = Math.ceil(imageBlock.offsetWidth / 50) * 50;
+        imageBlock.style.backgroundImage = `url('./${width}/${height}')`;
+    }
+</script>
+<noscript>
+    <style>
+        .right-block-top-image {
+            background-image: url('./160/180');
+        }
+
+        .right-block-bottom-image {
+            background-image: url('./160/285');
+        }
+
+        .bottom-block-left-image {
+            background-image: url('./250/185');
+        }
+
+        .bottom-block-right-image {
+            background-image: url('./335/185');
+        }
+    </style>
+</noscript>
+</body>
+</html>
