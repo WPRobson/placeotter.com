@@ -31,11 +31,11 @@ var images [][]byte
 
 var imageResponseCache *ttlcache.Cache[string, []byte]
 
-var errorMessage = "%s is not a valid request path. Please make sure requested image is not larger than 6000x4000 and that the extension is one of the following: jpg, jpeg, png, gif"
+var errorMessage = "%s is not a valid request path. Please make sure requested image is not larger than 2000x2000 and that the extension is one of the following: jpg, jpeg, png, gif"
 
 func run() error {
 	r := chi.NewRouter()
-	limiter := tollbooth.NewLimiter(1, nil)
+	limiter := tollbooth.NewLimiter(5, nil)
 	limiter.SetIPLookups([]string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"})
 	r.Use(tollbooth_chi.LimitHandler(limiter))
 
@@ -101,7 +101,7 @@ func run() error {
 			return
 		}
 
-		if width > 6000 || height > 4000 {
+		if width > 2000 || height > 2000 {
 			w.WriteHeader(http.StatusBadRequest)
 			_, _ = w.Write([]byte(fmt.Sprintf(errorMessage, r.URL.Path)))
 			return
@@ -116,6 +116,7 @@ func run() error {
 
 		w.Header().Set("Content-Type", contentType)
 		_, err = w.Write(picture)
+		picture = nil
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -144,7 +145,7 @@ func getExtensionAndHeightFromURLParam(urlParam string) (string, int) {
 }
 
 func loadImages(array *[][]byte) error {
-	entries, err := os.ReadDir("resources/6000_by_4000")
+	entries, err := os.ReadDir("resources/2000_by_2000")
 	if err != nil {
 		return err
 	}
@@ -152,12 +153,14 @@ func loadImages(array *[][]byte) error {
 		if e.IsDir() {
 			continue
 		}
-		img, err := os.ReadFile("resources/6000_by_4000/" + e.Name())
+		img, err := os.ReadFile("resources/2000_by_2000/" + e.Name())
 		if err != nil {
 			return err
 		}
 		*array = append(*array, img)
+		img = nil
 	}
+	entries = nil
 	return nil
 }
 
@@ -171,11 +174,13 @@ func getRandomOtterImage(width, height int, extension string) ([]byte, error) {
 	}
 
 	a, err := jpeg.Decode(bytes.NewReader(image))
+	image = nil
 	if err != nil {
 		return nil, err
 	}
 
 	resizedImage := resize.Resize(uint(width), uint(height), a, resize.NearestNeighbor)
+	a = nil
 	buf := new(bytes.Buffer)
 
 	switch extension {
@@ -186,6 +191,7 @@ func getRandomOtterImage(width, height int, extension string) ([]byte, error) {
 	default:
 		err = jpeg.Encode(buf, resizedImage, &jpeg.Options{Quality: 40})
 	}
+	resizedImage = nil
 
 	if err != nil {
 		return nil, err
@@ -194,6 +200,9 @@ func getRandomOtterImage(width, height int, extension string) ([]byte, error) {
 	if imageResponseCache.Get(cacheKey) == nil {
 		imageResponseCache.Set(cacheKey, buf.Bytes(), ttlcache.DefaultTTL)
 	}
+	defer func() {
+		buf = nil
+	}()
 
 	return buf.Bytes(), nil
 }
