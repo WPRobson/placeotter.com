@@ -1,4 +1,4 @@
 # placeotter.com
 
-A small, simple service to generate a dynamically sized placeholder image of otters. written in a few hours by me, with caching and IP rate limiting
+A small, simple service to generate a dynamically sized placeholder image of otters. Written in a few hours with caching and IP rate limiting
 
